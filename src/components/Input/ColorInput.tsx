@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import chroma from 'chroma-js';
 import ColorFormatToggle from './ColorFormatToggle';
 import { parseColorInput, formatColor } from '../../utils/colorParser';
 import type { ColorInputFormat } from '../../types';
@@ -21,27 +20,25 @@ const SUGGESTIONS = [
 ];
 
 const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) => {
-  const [inputValue, setInputValue] = useState(value);
+  const [inputValue, setInputValue] = useState('');
   const [format, setFormat] = useState<ColorInputFormat>('hex');
   const [isFocused, setIsFocused] = useState(false);
+
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isInternalUpdate = useRef(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const internalUpdateRef = useRef(false);
 
   useEffect(() => {
-    if (!isInternalUpdate.current && value) {
-      setInputValue(formatColor(value, format));
+    if (!internalUpdateRef.current) {
+      setInputValue(value ? formatColor(value, format) : '');
     }
-    isInternalUpdate.current = false;
+    internalUpdateRef.current = false;
   }, [value, format]);
 
-  // Force text color after format change
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.style.color = '#1A1A19';
-      inputRef.current.style.webkitTextFillColor = '#1A1A19';
-    }
-  }, [inputValue, format]);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,10 +46,11 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
       setInputValue(raw);
 
       if (debounceRef.current) clearTimeout(debounceRef.current);
+
       debounceRef.current = setTimeout(() => {
         const parsed = parseColorInput(raw);
         if (parsed) {
-          isInternalUpdate.current = true;
+          internalUpdateRef.current = true;
           onChange(parsed);
         }
       }, 150);
@@ -63,16 +61,10 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
   const handleFormatChange = useCallback(
     (newFormat: ColorInputFormat) => {
       setFormat(newFormat);
+
       if (parsedHex) {
-        const newValue = formatColor(parsedHex, newFormat);
-        setInputValue(newValue);
-        // Force color update after state change
-        setTimeout(() => {
-          if (inputRef.current) {
-            inputRef.current.style.color = '#1A1A19';
-            inputRef.current.style.webkitTextFillColor = '#1A1A19';
-          }
-        }, 0);
+        internalUpdateRef.current = true;
+        setInputValue(formatColor(parsedHex, newFormat));
       }
     },
     [parsedHex]
@@ -80,8 +72,8 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
 
   const handleSuggestionClick = useCallback(
     (hex: string) => {
+      internalUpdateRef.current = true;
       setInputValue(formatColor(hex, format));
-      isInternalUpdate.current = true;
       onChange(hex);
     },
     [format, onChange]
@@ -96,17 +88,30 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
       transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.1 }}
       className="text-center"
     >
-      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#1A1A19] mb-3">
+      <style>{`
+        .color-input-text {
+          color: #1A1A19 !important;
+          -webkit-text-fill-color: #1A1A19 !important;
+          caret-color: #1A1A19 !important;
+        }
+        .color-input-text::placeholder {
+          color: #C5C2BD !important;
+          -webkit-text-fill-color: #C5C2BD !important;
+        }
+      `}</style>
+
+      <h1 className="mb-3 text-3xl font-semibold tracking-tight text-[#1A1A19] sm:text-4xl md:text-5xl">
         Start with a color
       </h1>
-      <p className="text-base sm:text-lg text-[#6B6965] mb-8 sm:mb-10 leading-relaxed px-2">
+
+      <p className="mb-8 px-2 text-base leading-relaxed text-[#6B6965] sm:mb-10 sm:text-lg">
         Enter any color to craft your complete design system
       </p>
 
-      <div className="max-w-xl mx-auto px-1">
+      <div className="mx-auto max-w-xl px-1">
         <div className="flex flex-col gap-3 sm:gap-0">
           <div
-            className={`relative flex items-center rounded-xl border bg-white transition-all duration-300 flex-1 py-5 px-4 sm:py-5 sm:px-5 ${
+            className={`relative isolate flex flex-1 items-center rounded-xl border bg-white px-4 py-5 transition-all duration-300 sm:px-5 ${
               isFocused ? 'shadow-md' : 'shadow-sm'
             } ${
               isInvalid
@@ -117,14 +122,16 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
             }`}
             style={
               isFocused && parsedHex
-                ? { borderColor: `${parsedHex}40`, boxShadow: `0 4px 20px ${parsedHex}12` }
+                ? {
+                    borderColor: `${parsedHex}40`,
+                    boxShadow: `0 4px 20px ${parsedHex}12`,
+                  }
                 : undefined
             }
           >
-            {/* Color swatch */}
-            <div className="pr-3 sm:pr-4 flex-shrink-0">
+            <div className="flex-shrink-0 pr-3 sm:pr-4">
               <div
-                className="w-5 h-5 sm:w-8 sm:h-8 rounded-full transition-all duration-300 flex-shrink-0"
+                className="h-5 w-5 rounded-full transition-all duration-300 sm:h-8 sm:w-8"
                 style={{
                   backgroundColor: parsedHex || 'transparent',
                   border: parsedHex ? 'none' : '2px dashed rgba(0,0,0,0.15)',
@@ -133,7 +140,6 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
             </div>
 
             <input
-              ref={inputRef}
               type="text"
               value={inputValue}
               onChange={handleInputChange}
@@ -141,18 +147,12 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
               onBlur={() => setIsFocused(false)}
               placeholder="#3B82F6"
               aria-label="Color value input"
-              style={{
-                color: '#1A1A19',
-                caretColor: '#1A1A19',
-                WebkitTextFillColor: '#1A1A19',
-              }}
-              className="flex-1 bg-transparent text-base sm:text-lg font-mono placeholder:text-[#C5C2BD] outline-none min-w-0"
               spellCheck={false}
               autoComplete="off"
+              className="color-input-text flex-1 min-w-0 bg-transparent font-mono text-base outline-none sm:text-lg"
             />
 
-            {/* Format toggle — desktop only */}
-            <div className="pl-3 flex-shrink-0 hidden sm:block">
+            <div className="hidden flex-shrink-0 pl-3 sm:block">
               <ColorFormatToggle
                 format={format}
                 onFormatChange={handleFormatChange}
@@ -161,7 +161,6 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
             </div>
           </div>
 
-          {/* Format toggle — mobile only */}
           <div className="flex justify-center sm:hidden">
             <ColorFormatToggle
               format={format}
@@ -171,7 +170,6 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
           </div>
         </div>
 
-        {/* Suggestions */}
         <AnimatePresence>
           {!parsedHex && (
             <motion.div
@@ -184,6 +182,7 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
               {SUGGESTIONS.map((sug) => (
                 <motion.button
                   key={sug.hex}
+                  type="button"
                   whileHover={{ scale: 1.15 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleSuggestionClick(sug.hex)}
@@ -191,10 +190,10 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
                   aria-label={`Select ${sug.name} color ${sug.hex}`}
                 >
                   <div
-                    className="w-10 h-10 rounded-full shadow-sm transition-shadow duration-200 group-hover:shadow-md"
+                    className="h-10 w-10 rounded-full shadow-sm transition-shadow duration-200 group-hover:shadow-md"
                     style={{ backgroundColor: sug.hex }}
                   />
-                  <span className="text-xs text-[#9C9890] group-hover:text-[#6B6965] transition-colors duration-200">
+                  <span className="text-xs text-[#9C9890] transition-colors duration-200 group-hover:text-[#6B6965]">
                     {sug.name}
                   </span>
                 </motion.button>
