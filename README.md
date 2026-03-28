@@ -175,7 +175,7 @@ Open a Pull Request
 
 ## 🎨 📧 Contact
 
-Created by Rehan — GitHub |  [Website →](https://rehandevs.vercel.app/) 
+Created by Rehan — GitHub |    [Website](https://rehandevs.vercel.app/) 
 
 ⭐ If you find this useful, please star the repo!
 
