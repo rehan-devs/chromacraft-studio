@@ -26,6 +26,7 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
   const [isFocused, setIsFocused] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInternalUpdate = useRef(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isInternalUpdate.current && value) {
@@ -33,6 +34,14 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
     }
     isInternalUpdate.current = false;
   }, [value, format]);
+
+  // Force text color after format change
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.color = '#1A1A19';
+      inputRef.current.style.webkitTextFillColor = '#1A1A19';
+    }
+  }, [inputValue, format]);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +64,15 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
     (newFormat: ColorInputFormat) => {
       setFormat(newFormat);
       if (parsedHex) {
-        setInputValue(formatColor(parsedHex, newFormat));
+        const newValue = formatColor(parsedHex, newFormat);
+        setInputValue(newValue);
+        // Force color update after state change
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.style.color = '#1A1A19';
+            inputRef.current.style.webkitTextFillColor = '#1A1A19';
+          }
+        }, 0);
       }
     },
     [parsedHex]
@@ -116,6 +133,7 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
             </div>
 
             <input
+              ref={inputRef}
               type="text"
               value={inputValue}
               onChange={handleInputChange}
@@ -123,7 +141,12 @@ const ColorInput: React.FC<ColorInputProps> = ({ value, onChange, parsedHex }) =
               onBlur={() => setIsFocused(false)}
               placeholder="#3B82F6"
               aria-label="Color value input"
-              className="flex-1 bg-transparent text-base sm:text-lg font-mono text-[#1A1A19] placeholder:text-[#C5C2BD] outline-none min-w-0"
+              style={{
+                color: '#1A1A19',
+                caretColor: '#1A1A19',
+                WebkitTextFillColor: '#1A1A19',
+              }}
+              className="flex-1 bg-transparent text-base sm:text-lg font-mono placeholder:text-[#C5C2BD] outline-none min-w-0"
               spellCheck={false}
               autoComplete="off"
             />
