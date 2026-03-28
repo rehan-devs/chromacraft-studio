@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import type { ColorInputFormat } from '../../types';
+import chroma from 'chroma-js';
 
 interface ColorFormatToggleProps {
   format: ColorInputFormat;
@@ -10,11 +11,22 @@ interface ColorFormatToggleProps {
 
 const formats: ColorInputFormat[] = ['hex', 'rgb', 'hsl'];
 
+function getTextColor(bgColor: string): string {
+  try {
+    const luminance = chroma(bgColor).luminance();
+    return luminance > 0.45 ? '#1A1A19' : '#FFFFFF';
+  } catch {
+    return '#FFFFFF';
+  }
+}
+
 const ColorFormatToggle: React.FC<ColorFormatToggleProps> = ({
   format,
   onFormatChange,
   accentColor,
 }) => {
+  const activeTextColor = getTextColor(accentColor);
+
   return (
     <div className="flex items-center bg-black/[0.04] rounded-lg p-0.5 gap-0.5">
       {formats.map((f) => (
@@ -23,7 +35,7 @@ const ColorFormatToggle: React.FC<ColorFormatToggleProps> = ({
           onClick={() => onFormatChange(f)}
           className="relative px-2.5 py-1 text-xs font-medium uppercase tracking-wider rounded-md transition-colors duration-200"
           style={{
-            color: format === f ? '#FFFFFF' : '#6B6965',
+            color: format === f ? activeTextColor : '#6B6965',
           }}
         >
           {format === f && (
