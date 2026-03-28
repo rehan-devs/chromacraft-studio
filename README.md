@@ -186,4 +186,5 @@ This project is open source and available under the MIT License.
 
 ---
 
-<p align="center">Made with ❤️ and <b>regex</b></p>
+<p align="center">Craft color systems with intention.
+ <b>Built with ❤️ for designers who care about craft.</b></p>
