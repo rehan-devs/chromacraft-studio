@@ -4,7 +4,7 @@
 
 Generate complete, production-ready color systems from a single brand color — with perceptually uniform shade scales, color harmonies, accessibility audits, dark mode palettes, and multi-format export.
 
-[Live Demo →](#) · [Report Bug →](../../issues) · [Request Feature →](../../issues)
+[Live Demo →](https://chromacraft-studio.vercel.app/) · [Report Bug →](../../issues) · [Request Feature →](../../issues)
 
 ---
 
