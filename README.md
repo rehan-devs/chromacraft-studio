@@ -1,5 +1,3 @@
-<div align="center">
-
 # 🎨 ChromaCraft Studio
 
 **A premium color system generator for designers and developers.**
@@ -14,8 +12,6 @@ Generate complete, production-ready color systems from a single brand color — 
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)
-
-</div>
 
 ---
 
@@ -51,13 +47,13 @@ Generate complete, production-ready color systems from a single brand color — 
 - **Node.js** 18+
 - **npm**, **yarn**, or **pnpm**
 
+---
+
 ### Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/rehan-devs/chromacraft-studio.git
-
-# Navigate to project
 cd chromacraft-studio
 
 # Install dependencies
@@ -66,70 +62,128 @@ npm install
 # Start development server
 npm run dev
 The app will be running at http://localhost:5173
+```
+---
 
-Build for Production
-Bash
+## 📦 Build for Production
 
+```bash
+# Create optimized production build
 npm run build
+
+# Preview production build locally
 npm run preview
-🛠️ Tech Stack
-Technology	Purpose
-React 18	UI framework with functional components & hooks
-TypeScript	Type safety in strict mode
-Tailwind CSS	Utility-first styling
-Chroma.js	Color science — LAB/LCH interpolation, contrast ratios
-Framer Motion	Spring-physics animations & micro-interactions
-Lucide React	Icon system
-Vite	Build tool & dev server
-Zero UI library dependencies. Every component is custom-built.
+```
 
-📁 Project Structure
+The `dist/` folder will contain your production-ready static files.
 
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| React 18 | UI framework with functional components and hooks. |
+| TypeScript | Type safety in strict mode. |
+| Vite | Build tool & dev server |
+| Tailwind CSS | Utility-first styling |
+| Chroma.js | Color science—LAB/LCH interpolation, contrast ratios. |
+| React Router v6 | Client-side routing |
+| Lucide React | Icon system. |
+| Framer Motion | Spring-physics animations and micro-interactions. |
+| Zero UI library dependencies | Every component is custom-built. |
+
+---
+
+## 📂 Project Structure
+```
 src/
-├── App.tsx                     # Root application component
-├── main.tsx                    # Entry point
-├── index.css                   # Global styles, fonts, grain texture
+├── App.tsx                  # Root application component
+├── main.tsx                 # Entry point
+├── index.css                # Global styles, fonts, grain texture
 ├── types/
-│   └── index.ts                # TypeScript interfaces
+│   └── index.ts             # TypeScript interfaces
 ├── hooks/
-│   ├── useColorEngine.ts       # Core color system generation
-│   ├── useSavedPalettes.ts     # localStorage palette management
-│   └── useClipboard.ts         # Clipboard API wrapper
+│   ├── useColorEngine.ts    # Core color system generation
+│   ├── useSavedPalettes.ts  # localStorage palette management
+│   └── useClipboard.ts      # Clipboard API wrapper
 ├── utils/
-│   ├── colorGenerator.ts       # Shade scales, harmonies, dark mode
-│   ├── contrastChecker.ts      # WCAG contrast calculations
-│   ├── exporters.ts            # CSS, Tailwind, SCSS, JSON export
-│   └── colorParser.ts          # Multi-format color input parsing
+│   ├── colorGenerator.ts    # Shade scales, harmonies, dark mode
+│   ├── contrastChecker.ts   # WCAG contrast calculations
+│   ├── exporters.ts         # CSS, Tailwind, SCSS, JSON export
+│   └── colorParser.ts       # Multi-format color input parsing
 └── components/
-    ├── Layout/                 # Header, Footer
-    ├── Input/                  # Color input, format toggle, color wheel
-    ├── Palette/                # Shade scale, harmonies, dark mode
-    ├── Accessibility/          # Contrast grid, live preview
-    ├── Export/                 # Multi-format code export
-    ├── SavedPalettes/          # Palette library drawer
-    └── Common/                 # Toast, copy button, section title, grain
-🎨 Color Science
+    ├── Layout/              # Header, Footer
+    ├── Input/               # Color input, format toggle, color wheel
+    ├── Palette/             # Shade scale, harmonies, dark mode
+    ├── Accessibility/       # Contrast grid, live preview
+    ├── Export/              # Multi-format code export
+    ├── SavedPalettes/       # Palette library drawer
+    └── Common/              # Toast, copy button, section title, grain
+```
+---
+
+## 🎨 Color Science
+
 ChromaCraft Studio uses perceptually uniform color spaces for all color math:
 
-Shade generation interpolates in LAB space between warm white (#FFFEF9) and warm black (#121210)
-Light tints are subtly desaturated for a natural feel
-Dark shades shift hue slightly toward blue, mimicking natural shadow behavior
-Dark mode palettes are generated using LCH color space for precise lightness and chroma control
-Contrast ratios follow WCAG 2.1 guidelines with AAA/AA/AA Large/Fail ratings
-🔑 What Makes This Different
-Feature	Typical Tools	ChromaCraft Studio
-Color interpolation	HSL (perceptually uneven)	LAB/LCH (perceptually uniform)
-Dark mode	Manual or none	Auto-generated semantic palette with UI preview
-Accessibility	Basic or separate tool	Integrated audit with live text preview
-Color wheel	Static display	Interactive, draggable with harmony visualization
-Export	Single format	CSS, Tailwind, SCSS, JSON with custom naming
-App feel	Generic dashboard	Editorial design tool with grain texture & micro-interactions
-📄 License
+- Shade generation interpolates in LAB space between warm white (#FFFEF9) and warm black (#121210)
+- Light tints are subtly desaturated for a natural feel
+- Dark shades shift hue slightly toward blue, mimicking natural shadow behavior
+- Dark mode palettes are generated using LCH color space for precise lightness and chroma control
+- Contrast ratios follow WCAG 2.1 guidelines with AAA/AA/AA Large/Fail ratings
+
+---
+
+## 🎨 🔑 What Makes This Different
+
+- Feature	Typical Tools	ChromaCraft Studio
+- Color interpolation	HSL (perceptually uneven)	LAB/LCH (perceptually uniform)
+- Dark mode	Manual or none	Auto-generated semantic palette with UI preview
+- Accessibility	Basic or separate tool	Integrated audit with live text preview
+- Color wheel	Static display	Interactive, draggable with harmony visualization
+- Export	Single format	CSS, Tailwind, SCSS, JSON with custom naming
+- App feel	Generic dashboard	Editorial design tool with grain texture & micro-interactions
+
+---
+
+## 🎨 🗺️ Roadmap
+
+ - **Color Blindness Simulation** — Preview palettes as seen by colorblind users
+ - **Figma Plugin** — Export directly to Figma variables
+ - **VS Code Extension** — Generate palettes without leaving your editor
+ - **AI Color Naming** — Intelligent, memorable names for your shades
+ - **Brand Guidelines Export** — Generate PDF documentation
+ - **Team Collaboration** — Share and sync palettes across teams
+ - **Color Trend Analysis** — Suggestions based on current design trends
+
+---
+
+## 🎨 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+
+```
+Fork the repository
+Create your feature branch (git checkout -b feature/amazing-feature)
+Commit your changes (git commit -m 'Add amazing feature')
+Push to the branch (git push origin feature/amazing-feature)
+Open a Pull Request
+```
+
+---
+
+## 🎨 📧 Contact
+
+Created by Rehan — GitHub | Website
+
+⭐ If you find this useful, please star the repo!
+
+---
+
+## 🎨 📄 License
 This project is open source and available under the MIT License.
 
-<div align="center">
-Craft color systems with intention.
+---
 
-<sub>Built with care for designers who care about craft.</sub>
-
-</div> ```
+<p align="center">Made with ❤️ and <b>regex</b></p>
