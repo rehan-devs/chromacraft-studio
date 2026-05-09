@@ -188,3 +188,4 @@ This project is open source and available under the MIT License.
 
 <p align="center">Craft color systems with intention.
  <b>Built with ❤️ for designers who care about craft.</b></p>
+<!-- gitpulse:contribution index="1" timestamp="2026-05-09" -->
